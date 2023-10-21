@@ -125,7 +125,7 @@ if [[ \$(supervisorctl status nezha) =~ STOPPED ]]; then
     echo "\$LATEST" > /version
   fi
   TIME=\$(date "+%Y-%m-%d-%H:%M:%S")
-  tar czvf \$GH_REPO/dashboard-\$TIME.tar.gz --exclude='dashboard/*.sh' --exclude='dashboard/app' --exclude='dashboard/argo.*' --exclude='dashboard/nezha.*' --exclude='dashboard/data/config.yaml' /dashboard
+  tar czvf \$GH_REPO/dashboard-\$TIME.tar.gz /dashboard
   cd \$GH_REPO
   [ -e ./.git/index.lock ] && rm -f ./.git/index.lock
   echo "dashboard-\$TIME.tar.gz" > README.md
