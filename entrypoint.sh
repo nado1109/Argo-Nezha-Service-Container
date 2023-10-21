@@ -187,7 +187,6 @@ if [ -e /tmp/backup.tar.gz ]; then
   grep -q "dashboard/.*\.sh" <<< "\$FILE_LIST" && EXCLUDE[1]=--exclude='dashboard/*.sh'
   grep -q "dashboard/argo\..*" <<< "\$FILE_LIST" && EXCLUDE[2]=--exclude='dashboard/argo.*'
   grep -q "dashboard/nezha\..*" <<< "\$FILE_LIST" && EXCLUDE[3]=--exclude='dashboard/nezha.*'
-  grep -q "dashboard/data/config.yaml" <<< "\$FILE_LIST" && EXCLUDE[4]=--exclude='dashboard/data/config.yaml'
   tar xzvf /tmp/backup.tar.gz \${EXCLUDE[*]} -C /
   rm -f /tmp/backup.tar.gz
   hint "\n\$(supervisorctl start agent nezha grpcwebproxy)\n"; sleep 2
