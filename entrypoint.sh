@@ -182,12 +182,7 @@ wget --header="Authorization: token \$GH_PAT" --header='Accept: application/vnd.
 
 if [ -e /tmp/backup.tar.gz ]; then
   hint "\n\$(supervisorctl stop agent nezha grpcwebproxy)\n"
-  FILE_LIST=\$(tar -tzf /tmp/backup.tar.gz)
-  grep -q "dashboard/app" <<< "\$FILE_LIST" && EXCLUDE[0]=--exclude='dashboard/app'
-  grep -q "dashboard/.*\.sh" <<< "\$FILE_LIST" && EXCLUDE[1]=--exclude='dashboard/*.sh'
-  grep -q "dashboard/argo\..*" <<< "\$FILE_LIST" && EXCLUDE[2]=--exclude='dashboard/argo.*'
-  grep -q "dashboard/nezha\..*" <<< "\$FILE_LIST" && EXCLUDE[3]=--exclude='dashboard/nezha.*'
-  tar xzvf /tmp/backup.tar.gz \${EXCLUDE[*]} -C /
+  tar xzvf /tmp/backup.tar.gz -C /
   rm -f /tmp/backup.tar.gz
   hint "\n\$(supervisorctl start agent nezha grpcwebproxy)\n"; sleep 2
 fi
