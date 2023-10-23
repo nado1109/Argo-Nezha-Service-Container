@@ -125,7 +125,7 @@ if [[ \$(supervisorctl status nezha) =~ STOPPED ]]; then
     echo "\$LATEST" > /version
   fi
   TIME=\$(date "+%Y-%m-%d-%H:%M:%S")
-  tar czvf \$GH_REPO/dashboard-\$TIME.tar.gz /dashboard
+  tar czvf \$GH_REPO/dashboard-\$TIME.tar.gz --exclude='dashboard/*.sh' --exclude='dashboard/app' --exclude='dashboard/argo.*' --exclude='dashboard/nezha.*' --exclude='dashboard/data/config.yaml' /dashboard
   cd \$GH_REPO
   [ -e ./.git/index.lock ] && rm -f ./.git/index.lock
   echo "dashboard-\$TIME.tar.gz" > README.md
@@ -182,7 +182,13 @@ wget --header="Authorization: token \$GH_PAT" --header='Accept: application/vnd.
 
 if [ -e /tmp/backup.tar.gz ]; then
   hint "\n\$(supervisorctl stop agent nezha grpcwebproxy)\n"
-  tar xzvf /tmp/backup.tar.gz -C /
+  FILE_LIST=\$(tar -tzf /tmp/backup.tar.gz)
+  grep -q "dashboard/app" <<< "\$FILE_LIST" && EXCLUDE[0]=--exclude='dashboard/app'
+  grep -q "dashboard/.*\.sh" <<< "\$FILE_LIST" && EXCLUDE[1]=--exclude='dashboard/*.sh'
+  grep -q "dashboard/argo\..*" <<< "\$FILE_LIST" && EXCLUDE[2]=--exclude='dashboard/argo.*'
+  grep -q "dashboard/nezha\..*" <<< "\$FILE_LIST" && EXCLUDE[3]=--exclude='dashboard/nezha.*'
+  grep -q "dashboard/data/config.yaml" <<< "\$FILE_LIST" && EXCLUDE[4]=--exclude='dashboard/data/config.yaml'
+  tar xzvf /tmp/backup.tar.gz \${EXCLUDE[*]} -C /
   rm -f /tmp/backup.tar.gz
   hint "\n\$(supervisorctl start agent nezha grpcwebproxy)\n"; sleep 2
 fi
